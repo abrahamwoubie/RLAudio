@@ -1,6 +1,9 @@
 import os, sys, random, operator
 import numpy as np
 import matplotlib.pyplot as plt
+import gym
+from gym_Audio.envs import discrete
+
 
 from Agent import Agent
 from Environment import Environment
@@ -15,7 +18,7 @@ number_of_episodes=[]
 
 # Train agent
 print("\nTraining agent...\n")
-N_episodes =2000
+N_episodes =10
 reward_List=[]
 for episode in range(N_episodes):
 
