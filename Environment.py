@@ -17,8 +17,8 @@ from scipy.spatial import  distance
 
 """
 
-nRow=4
-nCol=4
+nRow=8
+nCol=8
 
 class Environment:
     
@@ -39,7 +39,7 @@ class Environment:
         goal_col = random.choice(range(0, nCol - 1))
         self.goal_state=(goal_row,goal_col)
 
-        return self.state,self.goal_state
+        return self.state#,self.goal_state
 
 
     def step(self, action):
