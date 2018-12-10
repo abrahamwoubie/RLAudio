@@ -1,10 +1,9 @@
 import os, sys, random, operator
 import numpy as np
 import matplotlib.pyplot as plt
-
 from Agent import Agent
+from ExtractFeatures import Extract_Features
 
-#from Extract import Extract_Samples
 
 from scipy.spatial import  distance
 
@@ -18,8 +17,8 @@ from scipy.spatial import  distance
 
 """
 
-nRow=20
-nCol=20
+nRow=4
+nCol=4
 
 class Environment:
     
@@ -43,7 +42,6 @@ class Environment:
         return self.state,self.goal_state
 
 
-
     def step(self, action):
         # Evolve agent state
         reward = 0
@@ -61,29 +59,22 @@ class Environment:
         if(action==3):
             state_next = self.state[0]  , (self.state[1] - 1) # left
 
-        # samples_state_next=Extract_Samples(state_next[0],state_next[1])
-        # samples_goal_state = Extract_Samples(nRow - 1, nCol - 1)
+        samples=Extract_Features
+        samples_state_next=samples.Extract_Samples(state_next[0],state_next[1],nRow,nCol)
+        samples_goal_state = samples.Extract_Samples(nRow - 1, nCol - 1,nRow,nCol)
 
         #print("Extracted Samples of row {} col {} is {}".format(state_next[0],state_next[1],samples_state_next))
 
         # Collect reward
-        if(state_next==(self.nRow-1,self.nCol-1)):
-        #if(state_next==self.goal_state):
+        # if(state_next==(self.nRow-1,self.nCol-1)):
+        # #if(state_next==self.goal_state):
+        #     reward=1
+        #     done=True
+
+        if(distance.euclidean(samples_state_next,samples_goal_state)==0):
             reward=1
             done=True
 
-        #reward = self.R[self.state + (action,)] #  state(0,0) and action (1,)=>(0,0,1)
-        # if(distance.euclidean(samples_state_next,samples_goal_state)==0):
-        #     reward=1
-        #     done=True
-        # else:
-        #     reward=0
-        #     done=False
-
-        # Terminate if we reach bottom-r
-        # right grid corner
-        #done = (state_next[0] == self.nRow - 1) and (state_next[1] == self.nCol - 1)
-        # Update state
         self.state = state_next
         return state_next, reward, done
     
@@ -102,20 +93,4 @@ class Environment:
         if (col < self.nCol - 1):  # no passing right-boundary
             actions_allowed.append(self.action_dict["right"])
         actions_allowed = np.array(actions_allowed, dtype=int)
-        #print("actions allowed",actions_allowed)
         return actions_allowed
-
-def Extract_Samples(row, col):
-
-    fs = 100  # sample rate
-    f = 2  # the frequency of the signal
-
-    x = np.arange(fs)  # the points on the x axis for plotting
-
-    # compute the value (amplitude) of the sin wave at the for each sample
-    # if letter in b'G':
-    if(row==nRow and col==nCol):
-        samples = [100 + row + col + np.sin(2 * np.pi * f * (i / fs)) for i in x]
-    else:
-        samples = [row + col + np.sin(2 * np.pi * f * (i / fs)) for i in x]
-    return samples
