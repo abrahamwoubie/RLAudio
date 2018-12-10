@@ -11,15 +11,6 @@ from scipy.spatial import  distance
 
 """
 
- Example
- 
-  [[1 1 1 1 1 2]
-  [1 1 1 1 1 2]
-  [1 1 1 1 1 2]
-  [1 1 1 1 1 2]
-  [1 1 1 1 1 2]
-  [1 1 1 1 1 0]]
-
   action['up'] = 0
   action['right'] = 1
   action['down'] = 2
@@ -27,8 +18,8 @@ from scipy.spatial import  distance
 
 """
 
-nRow=4
-nCol=4
+nRow=20
+nCol=20
 
 class Environment:
     
@@ -37,16 +28,7 @@ class Environment:
         self.nRow = nRow  # x grid size
         self.nCol = nCol  # y grid size
         self.state_dim = (nRow, nCol)
-        # Define action space
-        self.action_dim = (4,)  # up, right, down, left
         self.action_dict = {"up": 0, "right": 1, "down": 2, "left": 3}
-        self.action_coords = [(-1, 0), (0, 1), (1, 0), (0, -1)]  # translations
-        # Define rewards table
-        #self.R = self._build_rewards()  # R(s,a) agent rewards
-        # Check action space consistency
-        if len(self.action_dict.keys()) != len(self.action_coords):
-            exit("err: inconsistent actions given")
-
 
     def reset(self):
         # Reset agent state to top-left grid corner
@@ -66,8 +48,18 @@ class Environment:
         # Evolve agent state
         reward = 0
         done = False
-        state_next = (self.state[0] + self.action_coords[action][0],
-                      self.state[1] + self.action_coords[action][1])
+
+        if(action==0):
+            state_next =  (self.state[0]-1) , self.state[1] # up
+
+        if(action==1):
+            state_next = self.state[0] , (self.state[1] + 1) # right
+
+        if(action==2):
+            state_next = (self.state[0] + 1) , self.state[1] # down
+
+        if(action==3):
+            state_next = self.state[0]  , (self.state[1] - 1) # left
 
         # samples_state_next=Extract_Samples(state_next[0],state_next[1])
         # samples_goal_state = Extract_Samples(nRow - 1, nCol - 1)
@@ -93,7 +85,6 @@ class Environment:
         #done = (state_next[0] == self.nRow - 1) and (state_next[1] == self.nCol - 1)
         # Update state
         self.state = state_next
-        #print("Returned next state",state_next)
         return state_next, reward, done
     
     def allowed_actions(self):
@@ -113,15 +104,6 @@ class Environment:
         actions_allowed = np.array(actions_allowed, dtype=int)
         #print("actions allowed",actions_allowed)
         return actions_allowed
-
-    # def _build_rewards(self):
-    #     # Define agent rewards R[s,a]
-    #     reward_goal = 1  # reward for arriving at terminal state (bottom-right corner)
-    #     reward_no_goal = 0  # penalty for not reaching terminal state
-    #     R = reward_no_goal * np.ones(self.state_dim + self.action_dim, dtype=float)  # R[s,a]
-    #     R[self.nRow - 2, self.nCol - 1, self.action_dict["down"]] = reward_goal  # arrive from above
-    #     R[self.nRow - 1, self.nCol - 2, self.action_dict["right"]] = reward_goal  # arrive from the left
-    #     return R
 
 def Extract_Samples(row, col):
 
