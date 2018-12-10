@@ -1,4 +1,3 @@
-# GridWorld using Q-Learning (`gridworld.py`)
 
 We use Q-learning to train an epsilon-greedy agent to find the shortest path between position `(0, 0)` to opposing corner `(Ny-1, Nx-1)` of a 2D rectangular grid in the 2D GridWorld environment of size (Ny, Nx).
 
